@@ -1,0 +1,226 @@
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive;
+  background: linear-gradient(-45deg, #0b6623, #1e8f3f, #145a32);
+  background-size: 400% 400%;
+  animation: jungleMove 15s ease infinite;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes jungleMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Hanging Branches */
+.branches {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 120px;
+  background: repeating-linear-gradient(
+    to right,
+    #1b5e20,
+    #1b5e20 20px,
+    #2e7d32 40px
+  );
+  clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);
+  z-index: 1;
+}
+
+/* Leaves Animation */
+.leaves span {
+  position: fixed;
+  top: -10%;
+  width: 25px;
+  height: 25px;
+  background: #66bb6a;
+  border-radius: 0 50% 50% 50%;
+  animation: fall 10s linear infinite;
+  opacity: 0.8;
+}
+
+.leaves span:nth-child(1) { left: 10%; animation-delay: 0s; }
+.leaves span:nth-child(2) { left: 30%; animation-delay: 3s; }
+.leaves span:nth-child(3) { left: 50%; animation-delay: 6s; }
+.leaves span:nth-child(4) { left: 70%; animation-delay: 2s; }
+.leaves span:nth-child(5) { left: 90%; animation-delay: 5s; }
+
+@keyframes fall {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(120vh) rotate(360deg); }
+}
+
+/* Quiz Container */
+.quiz-container {
+  background: rgba(255, 255, 255, 0.9);
+  max-width: 700px;
+  margin: 150px auto 50px;
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  z-index: 2;
+  position: relative;
+}
+
+.quiz-header {
+  text-align: center;
+}
+
+.quiz-header h1 {
+  color: #1b5e20;
+}
+
+.question {
+  margin: 20px 0;
+}
+
+.question p {
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+label {
+  display: block;
+  margin: 8px 0;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+label:hover {
+  background: #c8e6c9;
+  transform: scale(1.02);
+}
+
+/* Doodle Button */
+.submit-btn {
+  display: block;
+  margin: 30px auto;
+  padding: 15px 30px;
+  font-size: 18px;
+  background: #2e7d32;
+  color: white;
+  border: 3px dashed #1b5e20;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background: #1b5e20;
+  transform: scale(1.1);
+}
+
+/* Result */
+#result {
+  text-align: center;
+  font-size: 22px;
+  margin-top: 20px;
+  color: #1b5e20;
+}
+
+.next{
+    margin-right: 400px;
+
+}
+
+.previous, .next {
+    display: flex;
+    justify-content: center;
+    margin: 35px 0;
+}
+
+/* BUTTON STYLE */
+.press {
+    padding: 14px 34px;
+    font-size: 16px;
+    font-weight: 600;
+    Letter-spacing: 1px;
+    color: #fff;
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* HOVER EFFECT */
+.press:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, #66bb6a, #2e7d32);
+}
+
+/* CLICK EFFECT */
+.press:active {
+    transform: scale(0.96);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* OPTIONAL GLOW */
+.press::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.press:hover::after {
+    opacity: 1;
+}
+.previous, .next {
+    display: flex;
+    justify-content: center;
+    margin: 35px 0;
+}
+
+/* BUTTON STYLE */
+.press {
+    padding: 14px 34px;
+    font-size: 16px;
+    font-weight: 600;
+    Letter-spacing: 1px;
+    color: #fff;
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* HOVER EFFECT */
+.press:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, #66bb6a, #2e7d32);
+}
+
+/* CLICK EFFECT */
+.press:active {
+    transform: scale(0.96);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* OPTIONAL GLOW */
+.press::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.press:hover::after {
+    opacity: 1;
+}

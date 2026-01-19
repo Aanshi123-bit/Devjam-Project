@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Eco-Friendly Quiz</title>
+  <link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+
+<!-- Hanging Branches -->
+<div class="branches"></div>
+
+<!-- Floating Leaves -->
+<div class="leaves">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+
+<div class="quiz-container">
+  <div class="quiz-header">
+    <h1>🌍 Eco-Friendly Quiz</h1>
+    <p>Answer to check how eco-friendly you are 🍃</p>
+  </div>
+  
+
+  <form id="quizForm">
+
+    <div class="question">
+      <p>1. Which of these helps save water?</p>
+      <label><input type="radio" name="q1" value="B"> Fixing leaks</label>
+      <label><input type="radio" name="q1" value="A"> Leaving tap open</label>
+      <label><input type="radio" name="q1" value="C"> Washing car daily</label>
+      <label><input type="radio" name="q1" value="D"> Using more water</label>
+    </div>
+
+    <div class="question">
+      <p>2. Which energy source is renewable?</p>
+      <label><input type="radio" name="q2" value="B"> Solar</label>
+      <label><input type="radio" name="q2" value="A"> Coal</label>
+      <label><input type="radio" name="q2" value="C"> Oil</label>
+      <label><input type="radio" name="q2" value="D"> Gasoline</label>
+    </div>
+
+    <div class="question">
+      <p>3. What should we do with plastic bottles?</p>
+      <label><input type="radio" name="q3" value="C"> Recycle them</label>
+      <label><input type="radio" name="q3" value="A"> Throw in street</label>
+      <label><input type="radio" name="q3" value="B"> Burn them</label>
+      <label><input type="radio" name="q3" value="D"> Hide them</label>
+    </div>
+
+    <div class="question">
+      <p>4. Which practice saves electricity?</p>
+      <label><input type="radio" name="q4" value="B"> Switching off unused devices</label>
+      <label><input type="radio" name="q4" value="A"> Leaving lights on</label>
+      <label><input type="radio" name="q4" value="C"> Using more appliances</label>
+      <label><input type="radio" name="q4" value="D"> Running AC all day</label>
+    </div>
+
+    <div class="question">
+      <p>5. Which of these is biodegradable?</p>
+      <label><input type="radio" name="q5" value="A"> Banana peel</label>
+      <label><input type="radio" name="q5" value="B"> Plastic bag</label>
+      <label><input type="radio" name="q5" value="C"> Glass bottle</label>
+      <label><input type="radio" name="q5" value="D"> Metal can</label>
+    </div>
+
+    
+
+    <button type="button" class="submit-btn" onclick="submitQuiz()">🌿 Submit Quiz</button>
+  </form>
+    <div class="previous">
+        <a href="aqi.html"><div class="press">previous</div></a>
+    </div>
+    <div class="next">
+        <a href="spin.html"><div class="press">next</div></a>
+    </div>
+
+
+  <div id="result"></div>
+</div>
+
+
+<script src="quiz.js"></script>
+</body>
+</html>

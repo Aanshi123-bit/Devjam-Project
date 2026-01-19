@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eco-Friendly Living Guide</title>
+  <link rel="stylesheet" href="aqi.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="aqi.js" defer></script>
+</head>
+<body>
+
+  <!-- Animated Sky & Leaf -->
+  <div class="sky">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    <div class="leaf" onclick="showLeafFact()">🍃</div>
+  </div>
+  <div id="leafFact" class="leaf-fact"></div>
+
+  <!-- Header (Navigation Removed) -->
+  <header>
+    <h1>Eco-Friendly Living Guide</h1>
+    <p style="text-align:center; font-size:1.1rem;">
+      Understanding Air Quality and Its Impact on Life
+    </p>
+    <hr>
+  </header>
+
+  <main>
+    <!-- AQI Introduction Section -->
+    <section id="intro">
+      <h2>Breathing the Numbers: Decoding the Air Quality Index (AQI)</h2>
+      <p>
+        <strong>What is AQI?</strong><br><br>
+        The Air Quality Index (AQI) is a standardized system used to measure and report air quality levels.
+        It indicates how polluted the air currently is or how polluted it is expected to become.
+        AQI values are calculated based on major air pollutants such as particulate matter (PM₂.₅ and PM₁₀),
+        carbon monoxide (CO), sulfur dioxide (SO₂), nitrogen dioxide (NO₂), and ozone (O₃).
+        <br><br>
+        A lower AQI value represents good air quality, while a higher value indicates unhealthy air
+        that may affect human health and the environment.
+      </p>
+    </section>
+
+    <!-- AQI Health Effects Section -->
+    <section id="health-effects">
+      <h2>Silent Skies: How the Air Quality Index Shapes Our Health</h2>
+
+      <p><strong>Good AQI (0–50):</strong><br>
+        Air quality is satisfactory and poses little or no health risk.
+      </p>
+
+      <p><strong>Moderate AQI (51–100):</strong><br>
+        Acceptable air quality; however, sensitive individuals may experience minor discomfort.
+      </p>
+
+      <p><strong>Unhealthy for Sensitive Groups (101–150):</strong><br>
+        Children, elderly people, and those with asthma or heart conditions may experience breathing difficulties.
+      </p>
+
+      <p><strong>Unhealthy AQI (151–200):</strong><br>
+        Everyone may begin to experience health effects such as coughing, eye irritation, and shortness of breath.
+      </p>
+
+      <p><strong>Very Unhealthy AQI (201–300):</strong><br>
+        Health warnings are issued; prolonged exposure can cause serious respiratory and cardiovascular problems.
+      </p>
+
+      <p><strong>Hazardous AQI (301–500):</strong><br>
+        Severe health effects for the entire population; emergency conditions.
+      </p>
+    </section>
+
+    <!-- Air Pollution Table -->
+    <section id="air-pollution">
+      <h2>Most Polluted Cities (Air Quality Index)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>AQI</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Baghdad</td><td>Iraq</td><td>183</td><td>Unhealthy</td></tr>
+          <tr><td>2</td><td>Kolkata</td><td>India</td><td>170</td><td>Unhealthy</td></tr>
+          <tr><td>3</td><td>Dhaka</td><td>Bangladesh</td><td>162</td><td>Unhealthy</td></tr>
+          <tr><td>4</td><td>Lahore</td><td>Pakistan</td><td>160</td><td>Unhealthy</td></tr>
+          <tr><td>5</td><td>Manama</td><td>Bahrain</td><td>158</td><td>Unhealthy</td></tr>
+          <tr><td>6</td><td>Kampala</td><td>Uganda</td><td>158</td><td>Unhealthy</td></tr>
+          <tr><td>7</td><td>Doha</td><td>Qatar</td><td>157</td><td>Unhealthy</td></tr>
+          <tr><td>8</td><td>Karachi</td><td>Pakistan</td><td>157</td><td>Unhealthy</td></tr>
+          <tr><td>9</td><td>Delhi</td><td>India</td><td>155</td><td>Unhealthy</td></tr>
+          <tr><td>10</td><td>Mumbai</td><td>India</td><td>152</td><td>Unhealthy</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Grass and Flowers -->
+  <div class="grass">
+    <div class="blade blade1"></div>
+    <div class="blade blade2"></div>
+    <div class="blade blade3"></div>
+    <div class="blade blade4"></div>
+    <div class="blade blade5"></div>
+  </div>
+
+  <div class="flower" style="left:50px;">🌸</div>
+  <div class="flower" style="left:150px;">🌼</div>
+  <div class="flower" style="left:300px;">🌻</div>
+
+  <a href="ecoreflex.html"><div class="press">previous</div></a>
+  <a href="word.html"><div class="press">next</div></a>
+
+  
+
+  <footer>
+    <p>© 2026 Eco-Friendly Living Guide</p>
+  </footer>
+
+</body>
+</html>

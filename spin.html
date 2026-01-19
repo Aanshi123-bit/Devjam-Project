@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Eco Challenge Wheel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(#b3e5fc, #e8f5e9);
+  overflow-x: hidden;
+}
+
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50px;
+  opacity: 0.8;
+  animation: moveClouds linear infinite;
+}
+
+.cloud::before, .cloud::after {
+  content: "";
+  position: absolute;
+  background: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.cloud::before { top: -30px; left: 10px; }
+.cloud::after { top: -20px; right: 10px; }
+
+@keyframes moveClouds {
+  from { transform: translateX(-200px); }
+  to { transform: translateX(120vw); }
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+}
+
+h1 { color: #1b5e20; }
+
+.stats {
+  margin: 10px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.wheel-container {
+  position: relative;
+  width: 320px;
+  height: 320px;
+}
+
+canvas {
+  border-radius: 50%;
+  background: #fff;
+}
+
+.pointer {
+  position: absolute;
+  top: 50%;
+  right: -18px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 30px solid #d32f2f;
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px 26px;
+  font-size: 16px;
+  background: #388e3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #9e9e9e;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  animation: fadeIn 0.5s ease;
+}
+
+.modal-content h2 {
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.modal-content p {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.leaderboard {
+  margin-top: 20px;
+  width: 300px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.leaderboard h3 {
+  margin-top: 0;
+  color: #2e7d32;
+}
+
+.leaderboard li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: gold;
+  pointer-events: none;
+  animation: fall 1.5s linear forwards;
+}
+
+@keyframes fall {
+  0% { transform: translateY(0) rotate(0deg); opacity:1; }
+  100% { transform: translateY(600px) rotate(360deg); opacity:0; }
+}
+
+.previous, .next {
+    display: flex;
+    justify-content: center;
+    margin: 35px 0;
+}
+
+/* BUTTON STYLE */
+.press {
+    padding: 14px 34px;
+    font-size: 16px;
+    font-weight: 600;
+    Letter-spacing: 1px;
+    color: #fff;
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* HOVER EFFECT */
+.press:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, #66bb6a, #2e7d32);
+}
+
+/* CLICK EFFECT */
+.press:active {
+    transform: scale(0.96);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* OPTIONAL GLOW */
+.press::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.press:hover::after {
+    opacity: 1;
+}
+
+</style>
+</head>
+<body>
+
+<div class="cloud" style="width:120px;height:50px;top:40px;animation-duration:60s;"></div>
+<div class="cloud" style="width:160px;height:60px;top:120px;animation-duration:80s;"></div>
+<div class="cloud" style="width:100px;height:40px;top:200px;animation-duration:50s;"></div>
+
+<div class="container">
+
+<h1>🌍 Eco Challenge Wheel</h1>
+
+<div class="stats">
+  Points: <span id="points">0</span> |
+  Spins left today: <span id="spins">3</span>
+</div>
+
+<div class="wheel-container">
+  <canvas id="wheel" width="320" height="320"></canvas>
+  <div class="pointer"></div>
+</div>
+
+<button id="spinBtn">Spin</button>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h2 id="challengeTitle"></h2>
+    <p id="challengeText"></p>
+    <input type="file" accept="image/*" id="proofInput">
+    <p><small>Upload proof to earn 10 points</small></p>
+    <button onclick="submitProof()">Submit Proof</button>
+    <button style="background:#d32f2f" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<div class="leaderboard">
+  <h3>🏆 Leaderboard</h3>
+  <ul id="leaderboardList"></ul>
+  <button style="background:#f57c00;margin-top:10px;" onclick="clearLeaderboard()">Clear Leaderboard</button>
+</div>
+
+<div class="previous">
+    <a href="quiz.html"><div class="press">previous</div></a>
+</div>
+<div class="next">
+    <a href="feedback.html"><div class="press">next</div></a>
+</div>
+</div>
+
+<script>
+/* ===== ASK NAME ON PAGE LOAD ===== */
+let userName = localStorage.getItem("ecoUserName");
+while(!userName){
+  userName = prompt("Welcome! Please enter your name:");
+  if(userName) localStorage.setItem("ecoUserName", userName.trim());
+}
+
+/* ===== DATA ===== */
+const challenges = [
+  {emoji:"🚫", text:"Zero plastic day"},
+  {emoji:"🚿", text:"5-minute shower"},
+  {emoji:"🔌", text:"Unplug devices"},
+  {emoji:"🚶‍♂️", text:"Walk or bike"},
+  {emoji:"🥦", text:"Eat meat-free"},
+  {emoji:"🌱", text:"Plant something"},
+  {emoji:"🛍️", text:"Use reusable bags"},
+  {emoji:"📖", text:"Learn eco fact"},
+  {emoji:"🍽️", text:"No food waste"},
+  {emoji:"🚌", text:"Public transport"},
+  {emoji:"💡", text:"Switch off lights"},
+  {emoji:"📧", text:"Clean inbox"},
+  {emoji:"♻️", text:"Recycle properly"},
+  {emoji:"🍂", text:"Compost food scraps"},
+  {emoji:"💧", text:"Use refillable bottle"},
+  {emoji:"👕", text:"Buy second-hand"},
+  {emoji:"🎁", text:"Donate unused items"},
+  {emoji:"🧻", text:"Use cloth napkins"},
+  {emoji:"🥤", text:"Avoid single-use straws"},
+  {emoji:"🥕", text:"Support local produce"},
+  {emoji:"❄️", text:"Turn off AC when not needed"},
+  {emoji:"💡", text:"Use energy-efficient bulbs"},
+  {emoji:"📄", text:"Go paperless"},
+  {emoji:"🧹", text:"Participate in cleanup"}
+];
+
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+const center = canvas.width / 2;
+const slice = (2 * Math.PI) / challenges.length;
+let angle = 0;
+let currentChallenge = null;
+
+/* ===== DAILY SPINS ===== */
+const today = new Date().toDateString();
+if (localStorage.getItem("spinDate") !== today) {
+  localStorage.setItem("spinDate", today);
+  localStorage.setItem("spins", 3);
+}
+let spins = +localStorage.getItem("spins");
+
+/* ===== POINTS ===== */
+let points = +localStorage.getItem("points") || 0;
+document.getElementById("points").textContent = points;
+document.getElementById("spins").textContent = spins;
+
+/* ===== LEADERBOARD ===== */
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+function updateLeaderboard() {
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = "";
+  leaderboard
+    .sort((a,b)=>b.points-a.points)
+    .forEach(p=>{
+      const li = document.createElement("li");
+      li.innerHTML = `<span>${p.name}</span><span>${p.points}</span>`;
+      list.appendChild(li);
+    });
+}
+updateLeaderboard();
+
+/* ===== DRAW WHEEL WITH EMOJIS ===== */
+function drawWheel() {
+  challenges.forEach((c,i)=>{
+    const start = angle + i * slice;
+    ctx.beginPath();
+    ctx.moveTo(center,center);
+    ctx.arc(center,center,center,start,start+slice);
+    ctx.fillStyle = `hsl(${i*15},70%,70%)`;
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(center, center);
+    ctx.rotate(start + slice/2);
+    ctx.font = "28px Arial";
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#000";
+    ctx.fillText(c.emoji, center-10, 10);
+    ctx.restore();
+  });
+}
+drawWheel();
+
+/* ===== SPIN ===== */
+document.getElementById("spinBtn").onclick = ()=>{
+  if (spins <= 0) return alert("No spins left today!");
+  spins--;
+  localStorage.setItem("spins",spins);
+  document.getElementById("spins").textContent = spins;
+
+  let spinAngle = Math.random()*3000+2000;
+  let start = angle;
+  let startTime = performance.now();
+
+  function animate(t){
+    let p = Math.min((t-startTime)/3000,1);
+    angle = start + spinAngle*(1-Math.pow(1-p,3));
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawWheel();
+    if(p<1) requestAnimationFrame(animate);
+    else showResult();
+  }
+  requestAnimationFrame(animate);
+};
+
+function showResult(){
+  const index =
+    Math.floor(
+      challenges.length - ((angle%(2*Math.PI))/(2*Math.PI))*challenges.length
+    ) % challenges.length;
+
+  currentChallenge = challenges[index];
+  document.getElementById("challengeTitle").textContent = "🌿 Your Eco Challenge!";
+  document.getElementById("challengeText").textContent = currentChallenge.text;
+  document.getElementById("modal").style.display="flex";
+
+  triggerConfetti();
+}
+
+/* ===== CONFETTI ===== */
+function triggerConfetti(){
+  for(let i=0;i<50;i++){
+    const confetti = document.createElement("div");
+    confetti.className = "confetti";
+    confetti.style.left = Math.random()*window.innerWidth+"px";
+    confetti.style.background = `hsl(${Math.random()*360},70%,60%)`;
+    document.body.appendChild(confetti);
+    setTimeout(()=>confetti.remove(),1500);
+  }
+}
+
+/* ===== PROOF SUBMISSION ===== */
+function submitProof(){
+  const input = document.getElementById("proofInput");
+  if(!input.files.length) return alert("Upload an image!");
+
+  points += 10;
+  localStorage.setItem("points",points);
+  document.getElementById("points").textContent = points;
+
+  leaderboard.push({ name:userName, points });
+  localStorage.setItem("leaderboard",JSON.stringify(leaderboard));
+  updateLeaderboard();
+
+  alert(`✅ Proof submitted! +10 points for ${userName}`);
+  closeModal();
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+  document.getElementById("proofInput").value="";
+}
+
+/* ===== CLEAR LEADERBOARD AND RESET SPINS ===== */
+function clearLeaderboard(){
+  if(confirm("Are you sure you want to clear the leaderboard?")){
+    leaderboard = [];
+    localStorage.setItem("leaderboard",JSON.stringify(leaderboard));
+    updateLeaderboard();
+
+    // Reset spins
+    spins = 3;
+    localStorage.setItem("spins", spins);
+    document.getElementById("spins").textContent = spins;
+    alert("Leaderboard cleared and spins reset to 3!");
+  }
+}
+</script>
+</body>
+</html>

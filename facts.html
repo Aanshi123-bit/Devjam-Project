@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Eco-Friendly Scientific Facts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Poppins, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg,#b2dfdb,#c8e6c9,#e6ee9c);
+      padding: 30px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1b5e20;
+      margin-bottom: 40px;
+      animation: fadeDown 1s ease;
+    }
+
+    /* FLOATING BACKGROUND PARTICLES */
+    .particles span {
+      position: fixed;
+      bottom: -20px;
+      width: 14px;
+      height: 14px;
+      background: rgba(76,175,80,0.35);
+      border-radius: 50%;
+      animation: float 12s linear infinite;
+      z-index: -1;
+    }
+
+    .particles span:nth-child(1){left:10%;animation-duration:10s;}
+    .particles span:nth-child(2){left:25%;animation-duration:14s;}
+    .particles span:nth-child(3){left:40%;animation-duration:12s;}
+    .particles span:nth-child(4){left:60%;animation-duration:16s;}
+    .particles span:nth-child(5){left:75%;animation-duration:11s;}
+
+    @keyframes float {
+      from { transform: translateY(0) scale(0.8); opacity: 0.8; }
+      to { transform: translateY(-120vh) scale(1.4); opacity: 0; }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CARDS GRID */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 25px;
+      max-width: 1000px;
+      margin: auto;
+      animation: fadeUp 1.2s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .eco-card {
+      height: 140px;
+      border-radius: 18px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+      transition: 0.3s;
+      animation: breathe 6s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    .eco-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+    }
+
+    .eco-card:hover {
+      transform: scale(1.08);
+    }
+
+    .eco-title {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+      color: #fff;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    /* POPUP OVERLAY */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    /* POPUP CARD */
+    .popup-card {
+      background: white;
+      width: 380px;
+      max-width: 90%;
+      border-radius: 20px;
+      padding: 20px;
+      animation: pop 0.35s ease;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    }
+
+    .popup-card h2 {
+      color: #2e7d32;
+      text-align: center;
+    }
+
+    .popup-card p {
+      color: #333;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .popup-card img {
+      width: 100%;
+      border-radius: 14px;
+      margin-top: 15px;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* PREVIOUS & NEXT BUTTON CONTAINER */
+    .previous, .next {
+        display: flex;
+        justify-content: center;
+        margin: 35px 0;
+    }
+
+    /* BUTTON STYLE */
+    .press {
+        padding: 14px 34px;
+        font-size: 16px;
+        font-weight: 600;
+        Letter-spacing: 1px;
+        color: #fff;
+        background: linear-gradient(135deg, #43a047, #1b5e20);
+        border-radius: 40px;
+        text-decoration: none;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        transition: all 0.35s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* HOVER EFFECT */
+    .press:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        background: linear-gradient(135deg, #66bb6a, #2e7d32);
+    }
+
+    /* CLICK EFFECT */
+    .press:active {
+        transform: scale(0.96);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    /* OPTIONAL GLOW */
+    .press::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent);
+        opacity: 0;
+        transition: 0.4s;
+    }
+
+    .press:hover::after {
+        opacity: 1;
+    }
+
+    
+  </style>
+</head>
+
+<body>
+
+<!-- BACKGROUND ANIMATION -->
+<div class="particles">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<h1>🌱 Eco-Friendly Scientific Facts</h1>
+
+<div class="cards">
+  <div class="eco-card" onclick="openPopup(0)" style="background-image:url('https://media.istockphoto.com/photos/electricity-picture-id172184404?k=6&m=172184404&s=170667a&w=0&h=OId7jqd4aToWMAsBkOppLQrPSNHP2msGOIKZjUhGYq0=')">
+    <div class="eco-title">Switching off lights saves energy</div>
+  </div>
+
+  <div class="eco-card" onclick="openPopup(1)" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')">
+    <div class="eco-title">Plastic harms marine life</div>
+  </div>
+
+  <div class="eco-card" onclick="openPopup(2)" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e')">
+    <div class="eco-title">Trees reduce global warming</div>
+  </div>
+
+  <div class="eco-card" onclick="openPopup(3)" style="background-image:url('https://static.vecteezy.com/system/resources/thumbnails/023/885/476/small_2x/earth-in-water-drop-shape-dropping-on-the-ground-background-environment-and-world-savings-concept-digital-art-illustration-generative-ai-photo.jpg')">
+    <div class="eco-title">Why saving water is important</div>
+  </div>
+
+  <div class="eco-card" onclick="openPopup(4)" style="background-image:url('https://blog.akbartravels.com/wp-content/uploads/2022/09/Shutterstock_717704884.jpg')">
+    <div class="eco-title">Public transport is eco-friendly</div>
+  </div>
+
+  <div class="eco-card" onclick="openPopup(5)" style="background-image:url('https://static.vecteezy.com/system/resources/thumbnails/035/781/395/small_2x/ai-generated-recycle-bin-that-emphasizes-cleanliness-and-order-generative-ai-photo.jpg')">
+    <div class="eco-title">Recycling saves resources</div>
+  </div>
+
+  <div class="eco-card" onclick="openPopup(6)" style="background-image:url('https://images.pexels.com/photos/2044447/pexels-photo-2044447.jpeg')">
+    <div class="eco-title">LED bulbs help environment</div>
+  </div>
+
+  <div class="eco-card" onclick="openPopup(7)" style="background-image:url('https://images.unsplash.com/photo-1490645935967-10de6ba17061')">
+    <div class="eco-title">Eating less meat helps planet</div>
+  </div>
+</div>
+
+<!-- POPUP -->
+<div class="overlay" id="overlay" onclick="closePopup()">
+  <div class="popup-card" onclick="event.stopPropagation()">
+    <h2 id="popupTitle"></h2>
+    <p id="popupText"></p>
+    <img id="popupImg">
+  </div>
+</div>
+
+<div class="previous">
+    <a href="dos.html"><div class="press">previous</div></a>
+</div>
+<div class="next">
+    <a href="ecoreflex.html"><div class="press">next</div></a>
+</div>
+
+<script>
+const overlay = document.getElementById("overlay");
+const popupTitle = document.getElementById("popupTitle");
+const popupText = document.getElementById("popupText");
+const popupImg = document.getElementById("popupImg");
+
+const data = [
+  { title:"Switching off lights saves energy", text:"Electricity generation depends largely on fossil fuels. Turning off lights reduces power demand and CO₂ emissions.", img:"https://media.istockphoto.com/photos/electricity-picture-id172184404?k=6&m=172184404&s=170667a&w=0&h=OId7jqd4aToWMAsBkOppLQrPSNHP2msGOIKZjUhGYq0= "},
+  { title:"Plastic harms marine life", text:"Plastic breaks into microplastics which are ingested by marine animals, causing injuries and food chain pollution.", img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e" },
+  { title:"Trees reduce global warming", text:"Trees absorb carbon dioxide during photosynthesis and store carbon, reducing greenhouse gases.", img:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e" },
+  { title:"Why saving water is important", text:"Freshwater is limited. Overuse leads to groundwater depletion and ecological imbalance.", img:"https://static.vecteezy.com/system/resources/thumbnails/023/885/476/small_2x/earth-in-water-drop-shape-dropping-on-the-ground-background-environment-and-world-savings-concept-digital-art-illustration-generative-ai-photo.jpg" },
+  { title:"Public transport is eco-friendly", text:"It reduces the number of vehicles on roads, lowering fuel consumption and air pollution.", img:"https://blog.akbartravels.com/wp-content/uploads/2022/09/Shutterstock_717704884.jpg" },
+  { title:"Recycling saves resources", text:"Recycling reduces raw material extraction and saves energy. Aluminum recycling saves up to 95% energy.", img:"https://static.vecteezy.com/system/resources/thumbnails/035/781/395/small_2x/ai-generated-recycle-bin-that-emphasizes-cleanliness-and-order-generative-ai-photo.jpg" },
+  { title:"LED bulbs help environment", text:"LEDs use less electricity and last longer, reducing waste and emissions.", img:"https://images.pexels.com/photos/2044447/pexels-photo-2044447.jpeg" },
+  { title:"Eating less meat helps planet", text:"Livestock farming emits methane and requires large land and water resources.", img:"https://images.unsplash.com/photo-1490645935967-10de6ba17061" }
+];
+
+function openPopup(i){
+  overlay.style.display="flex";
+  popupTitle.innerText=data[i].title;
+  popupText.innerText=data[i].text;
+  popupImg.src=data[i].img;
+}
+
+function closePopup(){
+  overlay.style.display="none";
+}
+</script>
+
+</body>
+</html>

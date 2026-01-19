@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Eco Word Guess 🌱</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #299a71, #dcedc1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #2e7d32;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 2px #fff;
+    }
+
+    #instructions {
+      background: #c4e392;
+      border: 2px solid #388e3c;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      font-size: 1.1em;
+      color: #1b5e20;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+    }
+
+    .tile {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #388e3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: #ecb6b68e;
+      border-radius: 8px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .correct {
+      background-color: #66bb6a; /* Green */
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .present {
+      background-color: #ffee58; /* Yellow */
+      color: black;
+      transform: scale(1.1);
+    }
+
+    .absent {
+      background-color: #e8ece8; /* Light green */
+      color: #555;
+    }
+
+    #input-area {
+      margin-top: 20px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1.2em;
+      border: 2px solid #388e3c;
+      border-radius: 6px;
+      text-transform: uppercase;
+      width: 100px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      font-size: 1.1em;
+      background-color: #388e3c;
+      color: rgb(236, 235, 238);
+      border:#555;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2e7d32;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-size: 1.2em;
+      color: #1b5e20;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Eco Word Guess 🌱</h1>
+  <div id="instructions">
+    🟩 Green: Correct letter in the right position<br>
+    🟨 Yellow: Correct letter but wrong position<br>
+    🌿 Light Green: Letter not in the word
+  </div>
+  <div id="game-board"></div>
+  <div id="input-area">
+    <input type="text" id="guess-input" maxlength="4" />
+    <button onclick="submitGuess()">Submit</button>
+    <button onclick="newGame()">New Word</button>
+  </div>
+  <div id="message"></div>
+  <a href="aqi.html"><div class="press">previous</div></a>
+  <a href="quiz.html"><div class="press">next</div></a>
+
+
+  <script>
+    const ecoWords = ["TREE", "LEAF", "WIND", "SOLR", "RAIN", "PURE", "SOIL", "BIRD", "SEED", "AIRY"];
+    let availableWords = [...ecoWords]; // pool of unused words
+    let currentWord = "";
+    let attempts = 0;
+
+    function initBoard() {
+      const board = document.getElementById("game-board");
+      board.innerHTML = "";
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement("div");
+        row.classList.add("row");
+        for (let j = 0; j < 4; j++) {
+          const tile = document.createElement("div");
+          tile.classList.add("tile");
+          row.appendChild(tile);
+        }
+        board.appendChild(row);
+      }
+    }
+
+    function newGame() {
+      if (availableWords.length === 0) {
+        // reset when all words have been used
+        availableWords = [...ecoWords];
+      }
+      const randomIndex = Math.floor(Math.random() * availableWords.length);
+      currentWord = availableWords[randomIndex];
+      availableWords.splice(randomIndex, 1); // remove chosen word
+      attempts = 0;
+      initBoard();
+      document.getElementById("message").textContent = "Guess the eco word!";
+      document.getElementById("guess-input").value = "";
+    }
+
+    function submitGuess() {
+      const guess = document.getElementById("guess-input").value.toUpperCase();
+      if (guess.length !== 4) {
+        alert("Enter a 4-letter word!");
+        return;
+      }
+      if (attempts >= 6) {
+        document.getElementById("message").textContent = "No more attempts! Word was " + currentWord;
+        return;
+      }
+
+      const row = document.getElementsByClassName("row")[attempts];
+      const wordArray = currentWord.split("");
+      const guessArray = guess.split("");
+
+      // Track letter usage
+      let letterCount = {};
+      wordArray.forEach(letter => {
+        letterCount[letter] = (letterCount[letter] || 0) + 1;
+      });
+
+      // First pass: mark greens
+      for (let i = 0; i < 4; i++) {
+        const tile = row.children[i];
+        tile.textContent = guessArray[i];
+        if (guessArray[i] === wordArray[i]) {
+          tile.classList.add("correct");
+          letterCount[guessArray[i]]--; // use up this letter
+        }
+      }
+
+      // Second pass: mark yellows or grays
+      for (let i = 0; i < 4; i++) {
+        const tile = row.children[i];
+        if (!tile.classList.contains("correct")) {
+          if (letterCount[guessArray[i]] > 0) {
+            tile.classList.add("present");
+            letterCount[guessArray[i]]--; // use up one occurrence
+          } else {
+            tile.classList.add("absent");
+          }
+        }
+      }
+
+      attempts++;
+      if (guess === currentWord) {
+        document.getElementById("message").textContent = "🎉 Correct! You found the eco word!";
+      } else if (attempts === 6) {
+        document.getElementById("message").textContent = "❌ Out of chances! Word was " + currentWord;
+      }
+
+      document.getElementById("guess-input").value = "";
+    }
+
+    // Start first game
+    newGame();
+  </script>
+</body>
+</html>

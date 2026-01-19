@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Eco Reflex ♻️</title>
+
+<style>
+:root {
+  --mint: #d8f3dc;
+  --leaf: #52b788;
+  --forest: #2d6a4f;
+  --sky: #caf0f8;
+  --sun: #ffd166;
+  --red: #e63946;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to bottom, var(--sky), var(--mint));
+  text-align: center;
+  color: var(--forest);
+}
+
+h1 {
+  margin: 15px 0;
+}
+
+#game {
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.stats {
+  display: none;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.stat {
+  background: var(--mint);
+  padding: 10px;
+  border-radius: 12px;
+  width: 30%;
+  font-weight: bold;
+}
+
+#playArea {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#item {
+  display: none;
+  font-size: 64px;
+}
+
+.bins {
+  display: none;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.bin {
+  width: 32%;
+  padding: 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+}
+
+.recycle { background: var(--leaf); }
+.compost { background: var(--sun); color: #333; }
+.trash   { background: var(--red); }
+
+#message {
+  margin-top: 10px;
+  font-weight: bold;
+  min-height: 24px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 14px;
+  background: var(--leaf);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#leaderboard {
+  margin: 25px auto;
+  max-width: 400px;
+  background: var(--mint);
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.previous, .next {
+    display: flex;
+    justify-content: center;
+    margin: 35px 0;
+}
+
+/* BUTTON STYLE */
+.press {
+    padding: 14px 34px;
+    font-size: 16px;
+    font-weight: 600;
+    Letter-spacing: 1px;
+    color: #fff;
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* HOVER EFFECT */
+.press:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, #66bb6a, #2e7d32);
+}
+
+/* CLICK EFFECT */
+.press:active {
+    transform: scale(0.96);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* OPTIONAL GLOW */
+.press::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.press:hover::after {
+    opacity: 1;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>♻️ Eco Reflex</h1>
+
+
+<div id="game">
+
+  <div class="stats" id="stats">
+    <div class="stat">⏱ Time<br><span id="time">30</span></div>
+    <div class="stat">⭐ Score<br><span id="score">0</span></div>
+    <div class="stat">🔥 Combo<br><span id="combo">0</span></div>
+  </div>
+
+  <div id="playArea">
+    <div id="item"></div>
+  </div>
+
+  <div class="bins" id="bins">
+    <div class="bin recycle" onclick="choose('recycle')">♻️ Recycle</div>
+    <div class="bin compost" onclick="choose('compost')">🌱 Compost</div>
+    <div class="bin trash" onclick="choose('trash')">🗑 Trash</div>
+  </div>
+
+  <div id="message"></div>
+
+  <button id="startBtn" onclick="startGame()">▶ Start Game</button>
+
+</div>
+
+<div id="leaderboard">
+  <h3>🏆 Leaderboard</h3>
+  <ol id="scores"></ol>
+</div>
+
+<div class="previous">
+    <a href="facts.html"><div class="press">previous</div></a>
+</div>
+<div class="next">
+    <a href="aqi.html"><div class="press">next</div></a>
+</div>
+
+<script>
+/* ♻️ 36 ITEMS */
+let items = [
+
+  /* 🌱 COMPOST */
+  { icon: "🍌", type: "compost" },
+  { icon: "🍎", type: "compost" },
+  { icon: "🥕", type: "compost" },
+  { icon: "🥬", type: "compost" },
+  { icon: "🍞", type: "compost" },
+  { icon: "🍚", type: "compost" },
+  { icon: "☕", type: "compost" },
+  { icon: "🥚", type: "compost" },
+  { icon: "🍉", type: "compost" },
+  { icon: "🍓", type: "compost" },
+  { icon: "🌽", type: "compost" },
+  { icon: "🍂", type: "compost" },
+
+  /* ♻️ RECYCLE */
+  { icon: "📰", type: "recycle" },
+  { icon: "📦", type: "recycle" },
+  { icon: "📄", type: "recycle" },
+  { icon: "🧴", type: "recycle" },
+  { icon: "🥤", type: "recycle" },
+  { icon: "🧃", type: "recycle" },
+  { icon: "🥫", type: "recycle" },
+  { icon: "🍾", type: "recycle" },
+  { icon: "🫙", type: "recycle" },
+  { icon: "📚", type: "recycle" },
+  { icon: "🪟", type: "recycle" },
+  { icon: "📺", type: "recycle" },
+
+  /* 🗑 TRASH */
+  { icon: "🍬", type: "trash" },
+  { icon: "🧻", type: "trash" },
+  { icon: "🧷", type: "trash" },
+  { icon: "🩹", type: "trash" },
+  { icon: "🪥", type: "trash" },
+  { icon: "🚬", type: "trash" },
+  { icon: "🧸", type: "trash" },
+  { icon: "🎈", type: "trash" },
+  { icon: "🧼", type: "trash" },
+  { icon: "🪫", type: "trash" },
+  { icon: "👓", type: "trash" },
+  { icon: "🧽", type: "trash" }
+];
+
+/* GAME STATE */
+let currentItem;
+let score = 0;
+let combo = 0;
+let time = 30;
+let timer;
+
+/* SHUFFLE */
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function startGame() {
+  items = shuffle(items);
+
+  score = 0;
+  combo = 0;
+  time = 30;
+  message.textContent = "";
+
+  stats.style.display = "flex";
+  bins.style.display = "flex";
+  item.style.display = "block";
+  startBtn.style.display = "none";
+
+  updateUI();
+  nextItem();
+
+  timer = setInterval(() => {
+    time--;
+    updateUI();
+    if (time <= 0) endGame();
+  }, 1000);
+}
+
+function nextItem() {
+  currentItem = items[Math.floor(Math.random() * items.length)];
+  item.textContent = currentItem.icon;
+}
+
+function choose(bin) {
+  if (bin === currentItem.type) {
+    combo++;
+    score += 10 + combo * 2;
+    message.textContent = "✅ Correct!";
+  } else {
+    combo = 0;
+    score -= 5;
+    message.textContent = "❌ Wrong bin!";
+  }
+
+  updateUI();
+  nextItem();
+}
+
+function updateUI() {
+  scoreEl.textContent = score;
+  comboEl.textContent = combo;
+  timeEl.textContent = time;
+}
+
+function endGame() {
+  clearInterval(timer);
+
+  let name = prompt("⏱ Time's up! Enter your name:");
+  saveScore(name, score);
+  loadScores();
+
+  stats.style.display = "none";
+  bins.style.display = "none";
+  item.style.display = "none";
+  startBtn.style.display = "inline-block";
+
+  message.textContent = "🌍 Great job saving the planet!";
+}
+
+/* LEADERBOARD */
+function saveScore(name, score) {
+  let scores = JSON.parse(localStorage.getItem("ecoReflexScores")) || [];
+  scores.push({ name, score });
+  scores.sort((a, b) => b.score - a.score);
+  localStorage.setItem("ecoReflexScores", JSON.stringify(scores.slice(0,10)));
+}
+
+function loadScores() {
+  scoresList.innerHTML = "";
+  let scores = JSON.parse(localStorage.getItem("ecoReflexScores")) || [];
+  scores.forEach(s => {
+    let li = document.createElement("li");
+    li.textContent = `${s.name} - ${s.score}`;
+    scoresList.appendChild(li);
+  });
+}
+
+/* DOM */
+const scoreEl = document.getElementById("score");
+const comboEl = document.getElementById("combo");
+const timeEl = document.getElementById("time");
+const item = document.getElementById("item");
+const bins = document.getElementById("bins");
+const stats = document.getElementById("stats");
+const startBtn = document.getElementById("startBtn");
+const scoresList = document.getElementById("scores");
+
+loadScores();
+</script>
+
+</body>
+</html>
