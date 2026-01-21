@@ -52,44 +52,44 @@ async function askEco() {
 
   addMessage(query, "eco-user");
   input.value = "";
-  
+
+  // --- AQI by city ---
   if (/aqi|air quality/i.test(query)) {
-  const locationMatch = query.match(/of\s+([a-zA-Z\s]+)/i);
+    const locationMatch = query.match(/in\s+([a-zA-Z\s]+)/i) || query.match(/of\s+([a-zA-Z\s]+)/i);
 
-  if (locationMatch) {
-    const location = locationMatch[1].trim();
+    if (locationMatch) {
+      const location = locationMatch[1].trim();
 
-    try {
-      const aqiRes = await fetch(
-        `https://api.openaq.org/v2/latest?city=${encodeURIComponent(location)}&limit=1`
-      );
-      const aqiData = await aqiRes.json();
+      try {
+        const aqiRes = await fetch(
+          `https://api.openaq.org/v2/latest?city=${encodeURIComponent(location)}&limit=1`
+        );
+        const aqiData = await aqiRes.json();
 
-      if (aqiData.results && aqiData.results.length > 0) {
-        const measurements = aqiData.results[0].measurements;
-        let output = `<b>Air Quality in ${location}</b>:<br>`;
-        measurements.forEach((m) => {
-          output += `${m.parameter.toUpperCase()}: ${m.value} ${m.unit}<br>`;
-        });
-        addMessage(output, "eco-bot");
-      } else {
-        addMessage(`Sorry, I couldn't find AQI data for ${location}.`, "eco-bot");
+        if (aqiData.results && aqiData.results.length > 0) {
+          const measurements = aqiData.results[0].measurements;
+          let output = `<b>🌫️ Air Quality in ${location}</b>:<br>`;
+          measurements.forEach((m) => {
+            output += `${m.parameter.toUpperCase()}: ${m.value} ${m.unit}<br>`;
+          });
+          addMessage(output, "eco-bot");
+        } else {
+          addMessage(`Sorry, I couldn't find AQI data for ${location}.`, "eco-bot");
+        }
+      } catch (err) {
+        console.warn("OpenAQ request failed", err);
+        addMessage(`⚠️ Error fetching AQI for ${location}.`, "eco-bot");
       }
-    } catch (err) {
-      console.warn("OpenAQ request failed", err);
-      addMessage(`Error fetching AQI for ${location}.`, "eco-bot");
+
+      return; // stop further processing
     }
-
-    return; // stop further processing
   }
-}
-
 
   addMessage("🔍 Searching EcoPedia...", "eco-bot");
 
+  // --- Wikipedia search ---
   let searchQuery = query;
 
-  // Context memory (follow-ups)
   if (lastTopic && !query.toLowerCase().includes(lastTopic.toLowerCase())) {
     searchQuery = `${lastTopic} ${query}`;
   }
@@ -108,9 +108,7 @@ async function askEco() {
       lastTopic = title;
 
       const summaryRes = await fetch(
-        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
-          title
-        )}`
+        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`
       );
 
       const summaryData = await summaryRes.json();
@@ -128,29 +126,54 @@ async function askEco() {
       );
     }
   } catch (err) {
-    addMessage("⚠️ Something went wrong. Please try again.", "eco-bot");
+    addMessage("⚠️ Something went wrong while fetching information. Please try again.", "eco-bot");
   }
 
-
+  // --- Extra eco insights ---
+  // General AQI info
   if (/air|pollution|aqi|quality/i.test(query)) {
-    try {
-      const aqiRes = await fetch("https://api.openaq.org/v2/latest?limit=1");
-      const aqiData = await aqiRes.json();
-
-      if (aqiData.results.length) {
-        addMessage(
-          "🌫️ Air quality data is available via OpenAQ. Pollution levels vary by location — check local AQI for accurate results.",
-          "eco-bot"
-        );
-      }
-    } catch (e) {
-      console.warn("OpenAQ failed");
-    }
+    addMessage(
+      "🌫️ Air quality data is available via OpenAQ. Pollution levels vary by location — check local AQI for accurate results.",
+      "eco-bot"
+    );
   }
 
+  // Environmental facts
   if (/environment|waste|water|soil/i.test(query)) {
     addMessage(
-      "🌿 Environmental insights are supported by EPA Envirofacts, helping promote conservation and sustainable policies.",
+      "🌿 Environmental insights are supported by EPA Envirofacts, promoting conservation and sustainable policies.",
+      "eco-bot"
+    );
+  }
+
+  // Climate / CO2 info
+  if (/climate|temperature|co2/i.test(query)) {
+    addMessage(
+      "🌎 Climate info is tracked by NASA Earth Data: global CO₂ levels, temperature trends, and climate monitoring.",
+      "eco-bot"
+    );
+  }
+
+  // Green habits tips
+  if (/green habit|sustainable|recycle|compost/i.test(query)) {
+    addMessage(
+      "♻️ Tip: Reduce waste by composting, saving water, and switching to renewable energy sources. Small actions make a big impact!",
+      "eco-bot"
+    );
+  }
+
+  // Eco facts
+  if (/fact|did you know/i.test(query)) {
+    addMessage(
+      "🌱 Did you know? Planting just 10 trees can absorb ~1 ton of CO₂ over 40 years!",
+      "eco-bot"
+    );
+  }
+
+  // Friendly responses
+  if (/thank|thanks/i.test(query)) {
+    addMessage(
+      "🌿 You’re welcome! Keep the planet green 🌱",
       "eco-bot"
     );
   }
