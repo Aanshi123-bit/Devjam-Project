@@ -8,12 +8,11 @@ const messages = document.getElementById("eco-messages");
 let lastTopic = null;
 let greeted = false;
 
-// Open chat
 toggleBtn.onclick = () => {
   chatBox.style.display = "block";
   toggleBtn.style.display = "none";
 
-  if (!greeted) {
+   if (!greeted) {
     addMessage(
       "🌱 Hi! I’m <b>EcoPedia</b>, your eco-friendly assistant.<br>Ask me about sustainability, climate, pollution, green habits, or the environment!",
       "eco-bot"
@@ -121,3 +120,17 @@ if (/environment|waste|water|soil/i.test(query)) {
     }
   }
 }
+toggleBtn.onclick = () => {
+  chatBox.style.display = "block";
+  toggleBtn.style.display = "none";
+
+  if (!greeted) {
+    setTimeout(() => {
+      addMessage(
+        "🌱 Hi! I’m <b>EcoPedia</b>, your eco-friendly assistant.<br>Ask me anything about sustainability, green habits, climate, or the environment!",
+        "eco-bot"
+      );
+      greeted = true;
+    }, 100);
+  }
+};
