@@ -1,0 +1,71 @@
+#eco-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 9999;
+}
+
+#eco-chat {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 320px;
+  height: 420px;
+  background: #f9fff6;
+  border-radius: 12px;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  z-index: 9999;
+}
+
+#eco-header {
+  background: #4caf50;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#eco-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.eco-user {
+  text-align: right;
+  margin: 6px;
+  color: #2e7d32;
+}
+
+.eco-bot {
+  text-align: left;
+  margin: 6px;
+  color: #333;
+}
+
+#eco-input-area {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+#eco-input {
+  flex: 1;
+  padding: 8px;
+  border: none;
+}
+
+#eco-send {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+}
