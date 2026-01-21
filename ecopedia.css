@@ -1,71 +1,76 @@
-#eco-toggle {
+/* Core assistant widget styles */
+#eco-assistant {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #4caf50;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 30px;
-  cursor: pointer;
-  font-weight: bold;
+  font-family: 'Nunito', sans-serif;
   z-index: 9999;
+}
+
+#eco-toggle {
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#4caf50;
+  color:white;
+  padding:10px 18px;
+  border-radius:24px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  font-weight:600;
+  font-size:1rem;
+  user-select:none;
 }
 
 #eco-chat {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 320px;
-  height: 420px;
-  background: #f9fff6;
-  border-radius: 12px;
-  display: none;
-  flex-direction: column;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-  z-index: 9999;
+  display:none;
+  width:320px;
+  height:420px;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 30px 80px rgba(0,0,0,.25);
+  overflow:hidden;
+  flex-direction:column;
 }
 
 #eco-header {
-  background: #4caf50;
-  color: white;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 14px;
+  background:linear-gradient(135deg,#4caf50,#ff9800);
+  color:#fff;
 }
 
 #eco-messages {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-  font-size: 14px;
-}
-
-.eco-user {
-  text-align: right;
-  margin: 6px;
-  color: #2e7d32;
-}
-
-.eco-bot {
-  text-align: left;
-  margin: 6px;
-  color: #333;
+  padding:12px;
+  height:300px;
+  overflow:auto;
+  background:#fafafa;
 }
 
 #eco-input-area {
-  display: flex;
-  border-top: 1px solid #ccc;
+  display:flex;
+  gap:8px;
+  padding:10px;
 }
 
 #eco-input {
-  flex: 1;
-  padding: 8px;
-  border: none;
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
 }
 
 #eco-send {
-  background: #4caf50;
-  color: white;
-  border: none;
-  padding: 8px 12px;
+  padding:8px 12px;
+  border-radius:8px;
+  background:#4caf50;
+  color:#fff;
+  border:none;
+  cursor:pointer;
 }
+
+/* Message types */
+.eco-user { text-align:right; margin:6px 0; }
+.eco-bot { text-align:left; margin:6px 0; color:#1b5e20; }
