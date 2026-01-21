@@ -1,29 +1,24 @@
-const messages = document.getElementById("eco-messages");
-const input = document.getElementById("eco-input");
-const sendBtn = document.getElementById("eco-send");
-const toggleBtn = document.getElementById("eco-toggle");
-const chatBox = document.getElementById("eco-chat");
-const closeBtn = document.getElementById("eco-close");
+// ------------------- EcoPedia JS -------------------
 
-toggleBtn.addEventListener("click", () => {
-  chatBox.style.display = "block";
-  toggleBtn.style.display = "none";
-  // Show greeting on first open
-  if (!chatBox.dataset.greeted) {
-    addMessage(
-      "I’m EcoPedia, your eco-friendly assistant. Ask me anything about sustainability, green habits, and more!",
-      "eco-bot"
-    );
-    chatBox.dataset.greeted = "true";
-  }
+// Select elements
+const ecoAssistant = document.getElementById("wiki-assistant");
+const toggle = document.getElementById("eco-toggle");
+const chat = document.getElementById("wiki-chat");
+const closeBtn = document.getElementById("wiki-close");
+const messages = document.getElementById("wiki-messages");
+const input = document.getElementById("wiki-input");
+const sendBtn = document.getElementById("wiki-send");
+
+// Toggle chat visibility
+toggle.addEventListener("click", () => {
+  chat.style.display = chat.style.display === "block" ? "none" : "block";
 });
 
 closeBtn.addEventListener("click", () => {
-  chatBox.style.display = "none";
-  toggleBtn.style.display = "flex";
+  chat.style.display = "none";
 });
 
-
+// Helper function to add messages
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = type;
@@ -32,52 +27,69 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
+// Display initial greeting
+addMessage(
+  "I’m EcoPedia, your eco-friendly assistant. Ask me anything about sustainability, green habits and more!",
+  "wiki-bot"
+);
 
-function cleanQuery(query) {
-  return query
-    .toLowerCase()
-    .replace(/^(what is|who is|tell me about|define|explain)\s+/i, "")
-    .replace(/[?.!]+$/, "")  // Remove trailing punctuation
-    .trim();
-}
-
-
-
-async function fetchWikiSummary(query) {
+// Wikipedia search function using Wikipedia Search API
+async function searchWiki(query) {
   try {
-    const clean = cleanQuery(query);
-    const title = clean.replace(/\s+/g, "_"); // spaces -> underscores
-    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    // Clean input
+    const cleanQuery = query.trim();
 
-    if (data.extract) {
-      return data.extract;
-    } else {
-      return "Sorry, I couldn't find an answer on Wikipedia.";
+    // Search endpoint
+    const searchURL = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
+      cleanQuery
+    )}&format=json&origin=*`;
+
+    const searchResp = await fetch(searchURL);
+    const searchData = await searchResp.json();
+
+    if (
+      searchData.query &&
+      searchData.query.search &&
+      searchData.query.search.length > 0
+    ) {
+      // Take the first (most relevant) result
+      const pageTitle = searchData.query.search[0].title;
+
+      // Fetch the summary
+      const summaryURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+        pageTitle
+      )}`;
+      const summaryResp = await fetch(summaryURL);
+      const summaryData = await summaryResp.json();
+
+      if (summaryData.extract) {
+        return `<strong>${summaryData.title}</strong>: ${summaryData.extract}`;
+      }
     }
+
+    return "Sorry, I couldn't find an answer on Wikipedia.";
   } catch (err) {
     console.error(err);
-    return "Sorry, something went wrong while fetching data.";
+    return "Oops! Something went wrong while searching Wikipedia.";
   }
 }
 
-
-async function handleInput() {
+// Handle user query
+async function askEcoPedia() {
   const query = input.value.trim();
   if (!query) return;
 
-  addMessage(query, "eco-user");
+  addMessage(query, "wiki-user");
   input.value = "";
 
-  addMessage("Searching EcoPedia...", "eco-bot");
+  addMessage("Searching EcoPedia...", "wiki-bot");
 
-  const response = await fetchWikiSummary(query);
-  addMessage(response, "eco-bot");
+  const answer = await searchWiki(query);
+  addMessage(answer, "wiki-bot");
 }
 
-
-sendBtn.addEventListener("click", handleInput);
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") handleInput();
+// Event listeners
+sendBtn.addEventListener("click", askEcoPedia);
+input.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") askEcoPedia();
 });
