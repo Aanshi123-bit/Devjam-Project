@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Eco-Friendly Living Guide</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<link rel="stylesheet" href="ecopedia.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700&display=swap');
 
@@ -194,6 +194,27 @@ footer{
 
 <body>
 
+<!-- EcoPedia Assistant Widget -->
+<div id="eco-assistant">
+  <div id="eco-toggle">
+    <span style="font-size:1.4rem;">🌱</span>
+    <span>Ask EcoPedia</span>
+  </div>
+
+  <div id="eco-chat">
+    <div id="eco-header">
+      <button id="eco-close">×</button>
+    </div>
+
+    <div id="eco-messages"></div>
+
+    <div id="eco-input-area">
+      <input type="text" id="eco-input" placeholder="Ask a question..." />
+      <button id="eco-send">Send</button>
+    </div>
+  </div>
+</div>
+
 <section id="intro">
   <div style="text-align:center;position:relative;z-index:1">
     <h1 style="font-family:'Playfair Display',serif;font-size:3.6rem;color:#5d4037;margin-bottom:25px">
@@ -237,9 +258,10 @@ footer{
 <footer>
   <p>Designed with care | Eco-Friendly Living Guide</p>
 </footer>
-
+<script src="ecopedia.js"></script>
 </body>
 </html>
+
 
 
 
