@@ -171,10 +171,10 @@
 <body>
   <h1>Eco Word Guess 🌱</h1>
   <div id="instructions">
-    <h4>Guess the hidden 4-letter eco related word in 6 tries.</h4>
+    <h5>Guess the hidden 4-letter eco related word in 6 tries.</h5>
     🟩 Green: Correct letter in the right position<br>
     🟨 Yellow: Correct letter but wrong position<br>
-    🌿 Light Green: Letter not in the word
+    🌿 Grey: Letter not in the word
   </div>
   <div id="game-board"></div>
   <div id="input-area">
@@ -188,7 +188,7 @@
 
 
   <script>
-    const ecoWords = ["TREE", "LEAF", "WIND", "SOLR", "RAIN", "PURE", "SOIL", "BIRD", "SEED", "AIRY"];
+    const ecoWords = ["TREE", "LEAF", "WIND","ROOT", "RAIN", "PURE", "SOIL", "BIRD", "SEED", "AIRY"];
     let availableWords = [...ecoWords]; // pool of unused words
     let currentWord = "";
     let attempts = 0;
@@ -281,5 +281,6 @@
   </script>
 </body>
 </html>
+
 
 
