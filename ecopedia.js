@@ -7,21 +7,25 @@ const messages = document.getElementById("eco-messages");
 
 let lastTopic = null; // light context memory
 
+// Open chat
 toggleBtn.onclick = () => {
   chatBox.style.display = "block";
   toggleBtn.style.display = "none";
 };
 
+// Close / minimize chat
 closeBtn.onclick = () => {
   chatBox.style.display = "none";
   toggleBtn.style.display = "block";
 };
 
+// Send events
 sendBtn.onclick = askEco;
 input.addEventListener("keypress", (e) => {
   if (e.key === "Enter") askEco();
 });
 
+// Add message to chat
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = type;
@@ -30,6 +34,7 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
+// Main assistant logic (UNCHANGED)
 async function askEco() {
   const query = input.value.trim();
   if (!query) return;
