@@ -52,21 +52,35 @@ async function askEco() {
 
   addMessage(query, "eco-user");
   input.value = "";
-   // ---------- AQI CITY / COUNTRY HANDLER ----------
-if (/aqi|air quality/i.test(query)) {
-  // Try to extract a city or country name
+  
+  if (/aqi|air quality/i.test(query)) {
   const locationMatch = query.match(/of\s+([a-zA-Z\s]+)/i);
 
   if (locationMatch) {
     const location = locationMatch[1].trim();
 
-    addMessage(
-      `🌫️ <b>${location}</b> frequently experiences air quality variations due to factors like traffic emissions, industrial activity, weather conditions, and seasonal changes.<br><br>
-      AQI values change hourly, so for live and accurate data, please check official air-quality dashboards such as government pollution control boards or trusted AQI platforms.`,
-      "eco-bot"
-    );
+    try {
+      const aqiRes = await fetch(
+        `https://api.openaq.org/v2/latest?city=${encodeURIComponent(location)}&limit=1`
+      );
+      const aqiData = await aqiRes.json();
 
-    return; // ⛔ stop here, no Wikipedia needed
+      if (aqiData.results && aqiData.results.length > 0) {
+        const measurements = aqiData.results[0].measurements;
+        let output = `<b>Air Quality in ${location}</b>:<br>`;
+        measurements.forEach((m) => {
+          output += `${m.parameter.toUpperCase()}: ${m.value} ${m.unit}<br>`;
+        });
+        addMessage(output, "eco-bot");
+      } else {
+        addMessage(`Sorry, I couldn't find AQI data for ${location}.`, "eco-bot");
+      }
+    } catch (err) {
+      console.warn("OpenAQ request failed", err);
+      addMessage(`Error fetching AQI for ${location}.`, "eco-bot");
+    }
+
+    return; // stop further processing
   }
 }
 
