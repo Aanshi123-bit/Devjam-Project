@@ -1,73 +1,51 @@
-const assistant = document.getElementById("wiki-assistant");
-const toggle = document.getElementById("eco-toggle");
-const chat = document.getElementById("wiki-chat");
-const closeBtn = document.getElementById("wiki-close");
-const messages = document.getElementById("wiki-messages");
-const input = document.getElementById("wiki-input");
-const sendBtn = document.getElementById("wiki-send");
+// ----- EcoPedia JS -----
 
-toggle.addEventListener("click", () => {
-  chat.style.display = chat.style.display === "block" ? "none" : "block";
-});
+// Grab all relevant elements
+const ecoToggle = document.getElementById("eco-toggle");
+const ecoChat = document.getElementById("eco-chat");
+const ecoClose = document.getElementById("eco-close");
+const ecoMessages = document.getElementById("eco-messages");
+const ecoInput = document.getElementById("eco-input");
+const ecoSend = document.getElementById("eco-send");
 
-closeBtn.addEventListener("click", () => {
-  chat.style.display = "none";
-});
+// Greeting shown only once
+let greeted = false;
 
-
+// Function to add a message
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = type;
-  div.innerHTML = text;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+  div.textContent = text;
+  ecoMessages.appendChild(div);
+  ecoMessages.scrollTop = ecoMessages.scrollHeight;
 }
 
-// --- Universal query cleaner ---
-function cleanQuery(query) {
-  query = query.toLowerCase();
-  query = query.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"");
-  const stopwords = ["what","is","the","a","an","about","okay","how","do","you","please","can","i","tell","me","my","and","for","of","to","in"];
-  const words = query.split(" ").filter(word => !stopwords.includes(word));
-  return words.join(" ");
-}
+// Toggle chat visibility
+ecoToggle.addEventListener("click", () => {
+  ecoChat.style.display = ecoChat.style.display === "block" ? "none" : "block";
+  if (!greeted) {
+    addMessage("I’m EcoPedia, your eco-friendly assistant. Ask me anything about sustainability, green habits and more!", "eco-bot");
+    greeted = true;
+  }
+});
 
+// Close button
+ecoClose.addEventListener("click", () => {
+  ecoChat.style.display = "none";
+});
 
-async function askEcoPedia() {
-  const query = input.value.trim();
+// Send function
+async function sendQuery() {
+  const query = ecoInput.value.trim();
   if (!query) return;
 
-  // Initial greeting if first message
-  if (messages.childElementCount === 0) {
-    addMessage("I’m EcoPedia, your eco-friendly assistant. Ask me anything about sustainability, green habits and more!", "wiki-bot");
-  }
+  addMessage(query, "eco-user");
+  ecoInput.value = "";
 
-  addMessage(query, "wiki-user");
-  input.value = "";
+  addMessage("Searching EcoPedia…", "eco-bot");
 
-  addMessage("Searching for the best answer...", "wiki-bot");
+  // Process query: remove punctuation, lowercase, pick keywords
+  const cleaned = query.replace(/[^\w\s]/gi, "").toLowerCase();
+  const words = cleaned.split(/\s+/);
 
-
-  const cleanedQuery = cleanQuery(query);
-
-  try {
-    const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleanedQuery)}&utf8=&format=json&origin=*`;
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.query.search.length > 0) {
-      const snippet = data.query.search[0].snippet.replace(/<\/?[^>]+(>|$)/g, ""); // remove HTML tags
-      addMessage(snippet + `... <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(data.query.search[0].title)}" target="_blank">Read more</a>`, "wiki-bot");
-    } else {
-      addMessage("Sorry, I couldn't find an answer on Wikipedia.", "wiki-bot");
-    }
-  } catch (err) {
-    addMessage("Oops! Something went wrong while searching.", "wiki-bot");
-    console.error(err);
-  }
-}
-
-sendBtn.addEventListener("click", askEcoPedia);
-input.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") askEcoPedia();
-});
+  // Try each word to find Wikipedia page (this is the content sour
