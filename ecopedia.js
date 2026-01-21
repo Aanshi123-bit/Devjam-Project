@@ -8,32 +8,44 @@ const messages = document.getElementById("eco-messages");
 let lastTopic = null;
 let greeted = false;
 
-toggleBtn.onclick = () => {
+/* ===============================
+   OPEN CHAT + GREETING (FIXED)
+================================ */
+toggleBtn.addEventListener("click", () => {
   chatBox.style.display = "block";
   toggleBtn.style.display = "none";
 
-   if (!greeted) {
-    addMessage(
-      "🌱 Hi! I’m <b>EcoPedia</b>, your eco-friendly assistant.<br>Ask me about sustainability, climate, pollution, green habits, or the environment!",
-      "eco-bot"
-    );
-    greeted = true;
+  // Greeting appears ONCE and ONLY after chat is visible
+  if (!greeted) {
+    setTimeout(() => {
+      addMessage(
+        "🌱 Hi! I’m <b>EcoPedia</b>, your eco-friendly assistant.<br>Ask me about sustainability, green habits, climate, pollution, or the environment!",
+        "eco-bot"
+      );
+      greeted = true;
+    }, 200);
   }
-};
+});
 
-// Close chat
-closeBtn.onclick = () => {
+/* ===============================
+   CLOSE CHAT
+================================ */
+closeBtn.addEventListener("click", () => {
   chatBox.style.display = "none";
   toggleBtn.style.display = "flex";
-};
+});
 
-// Send
-sendBtn.onclick = askEco;
+/* ===============================
+   SEND EVENTS
+================================ */
+sendBtn.addEventListener("click", askEco);
 input.addEventListener("keypress", (e) => {
   if (e.key === "Enter") askEco();
 });
 
-// Utility
+/* ===============================
+   MESSAGE HELPER
+================================ */
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = type;
@@ -42,7 +54,9 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-// MAIN LOGIC
+/* ===============================
+   MAIN ASSISTANT LOGIC
+================================ */
 async function askEco() {
   const query = input.value.trim();
   if (!query) return;
@@ -54,11 +68,12 @@ async function askEco() {
 
   let searchQuery = query;
 
+  // Context memory (follow-ups)
   if (lastTopic && !query.toLowerCase().includes(lastTopic.toLowerCase())) {
     searchQuery = `${lastTopic} ${query}`;
   }
 
-  // --- 1️⃣ WIKIPEDIA (PRIMARY) ---
+  /* ---------- WIKIPEDIA (PRIMARY) ---------- */
   try {
     const wikiRes = await fetch(
       `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
@@ -77,6 +92,7 @@ async function askEco() {
           title
         )}`
       );
+
       const summaryData = await summaryRes.json();
 
       addMessage(
@@ -85,22 +101,25 @@ async function askEco() {
          🌍 Read more</a>`,
         "eco-bot"
       );
+    } else {
+      addMessage(
+        "Sorry, I couldn’t find anything relevant. Try rephrasing 🌿",
+        "eco-bot"
+      );
     }
-  } catch (e) {
-    console.warn("Wikipedia failed");
+  } catch (err) {
+    addMessage("⚠️ Something went wrong. Please try again.", "eco-bot");
   }
 
-  // --- 2️⃣ OPENAQ (AIR QUALITY) ---
+  /* ---------- OPENAQ (AIR QUALITY) ---------- */
   if (/air|pollution|aqi|quality/i.test(query)) {
     try {
-      const aqiRes = await fetch(
-        `https://api.openaq.org/v2/latest?limit=1`
-      );
+      const aqiRes = await fetch("https://api.openaq.org/v2/latest?limit=1");
       const aqiData = await aqiRes.json();
 
       if (aqiData.results.length) {
         addMessage(
-          "🌫️ Air Quality data is available via OpenAQ. Pollution levels vary by location. Consider checking local AQI for accurate results.",
+          "🌫️ Air quality data is available via OpenAQ. Pollution levels vary by location — check local AQI for accurate results.",
           "eco-bot"
         );
       }
@@ -109,28 +128,11 @@ async function askEco() {
     }
   }
 
-if (/environment|waste|water|soil/i.test(query)) {
-    try {
-      addMessage(
-        "🌿 Environmental data sourced from EPA Envirofacts supports sustainable policies and conservation efforts.",
-        "eco-bot"
-      );
-    } catch (e) {
-      console.warn("EPA API failed");
-    }
+  /* ---------- EPA INFO (LIGHT FALLBACK) ---------- */
+  if (/environment|waste|water|soil/i.test(query)) {
+    addMessage(
+      "🌿 Environmental insights are supported by EPA Envirofacts, helping promote conservation and sustainable policies.",
+      "eco-bot"
+    );
   }
 }
-toggleBtn.onclick = () => {
-  chatBox.style.display = "block";
-  toggleBtn.style.display = "none";
-
-  if (!greeted) {
-    setTimeout(() => {
-      addMessage(
-        "🌱 Hi! I’m <b>EcoPedia</b>, your eco-friendly assistant.<br>Ask me anything about sustainability, green habits, climate, or the environment!",
-        "eco-bot"
-      );
-      greeted = true;
-    }, 100);
-  }
-};
