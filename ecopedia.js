@@ -53,37 +53,47 @@ async function askEco() {
   addMessage(query, "eco-user");
   input.value = "";
 
-  // --- AQI by city ---
-  if (/aqi|air quality/i.test(query)) {
-    const locationMatch = query.match(/in\s+([a-zA-Z\s]+)/i) || query.match(/of\s+([a-zA-Z\s]+)/i);
+  if (/aqi|air quality|pollution/i.test(query)) {
+  const locationMatch = query.match(/(?:of|in)\s+([a-zA-Z\s]+)/i);
+  let location = locationMatch ? locationMatch[1].trim() : null;
 
-    if (locationMatch) {
-      const location = locationMatch[1].trim();
+  if (!location) {
+    addMessage(
+      "🌫️ Please specify a city to get the AQI, e.g., 'AQI of London'.",
+      "eco-bot"
+    );
+  } else {
+    try {
+      const waqiToken = "d8afe11cc524459482e1139afcbb64610c066f9e"; 
+      const waqiRes = await fetch(
+        `https://api.waqi.info/feed/${encodeURIComponent(location)}/?token=${waqiToken}`
+      );
+      const waqiData = await waqiRes.json();
 
-      try {
-        const aqiRes = await fetch(
-          `https://api.openaq.org/v2/latest?city=${encodeURIComponent(location)}&limit=1`
+      if (waqiData.status === "ok") {
+        const aqi = waqiData.data.aqi;
+        const cityName = waqiData.data.city.name;
+        addMessage(
+          `🌫️ Air Quality Index in <b>${cityName}</b> is <b>${aqi}</b>.`,
+          "eco-bot"
         );
-        const aqiData = await aqiRes.json();
-
-        if (aqiData.results && aqiData.results.length > 0) {
-          const measurements = aqiData.results[0].measurements;
-          let output = `<b>🌫️ Air Quality in ${location}</b>:<br>`;
-          measurements.forEach((m) => {
-            output += `${m.parameter.toUpperCase()}: ${m.value} ${m.unit}<br>`;
-          });
-          addMessage(output, "eco-bot");
-        } else {
-          addMessage(`Sorry, I couldn't find AQI data for ${location}.`, "eco-bot");
-        }
-      } catch (err) {
-        console.warn("OpenAQ request failed", err);
-        addMessage(`⚠️ Error fetching AQI for ${location}.`, "eco-bot");
+      } else {
+        addMessage(
+          `Sorry, I couldn't find AQI data for "${location}". Please check the city name.`,
+          "eco-bot"
+        );
       }
-
-      return; // stop further processing
+    } catch (err) {
+      console.warn("WAQI request failed", err);
+      addMessage(
+        `Error fetching AQI for "${location}". Try again later.`,
+        "eco-bot"
+      );
     }
   }
+
+  return; // stop further processing for Wikipedia etc.
+}
 
   addMessage("🔍 Searching EcoPedia...", "eco-bot");
 
