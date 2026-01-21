@@ -1,3 +1,11 @@
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll(".options").forEach(optionGroup => {
+    const options = Array.from(optionGroup.children);
+    options.sort(() => Math.random() - 0.5)
+           .forEach(option => optionGroup.appendChild(option));
+  });
+});
+
 function submitQuiz() {
   const answers = {
     q1: "B",
@@ -29,4 +37,5 @@ function submitQuiz() {
   }
 
   result.innerHTML = `You scored <strong>${score}/${total}</strong><br>${message}`;
+
 }
