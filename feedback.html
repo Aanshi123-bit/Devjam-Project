@@ -173,6 +173,32 @@
         <a href="index.html"><div class="press">home</div></a>
     </div>
   </form>
+  
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    emailjs.init("bg2ILbaSkCsSBkMC3");
+
+    const form = document.getElementById("feedback-form");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      emailjs.sendForm(
+        "service_emailjs",
+        "template_3cbboch",
+        this
+      )
+      .then(() => {
+        alert("Thank you for your feedback! 🌱");
+        form.reset();
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Something went wrong. Please try again.");
+      });
+    });
+  </script>
 </body>
 </html>
+
 
