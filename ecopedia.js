@@ -8,9 +8,7 @@ const messages = document.getElementById("eco-messages");
 let lastTopic = null;
 let greeted = false;
 
-/* ===============================
-   OPEN CHAT + GREETING (FIXED)
-================================ */
+
 toggleBtn.addEventListener("click", () => {
   chatBox.style.display = "block";
   toggleBtn.style.display = "none";
@@ -27,25 +25,19 @@ toggleBtn.addEventListener("click", () => {
   }
 });
 
-/* ===============================
-   CLOSE CHAT
-================================ */
+
 closeBtn.addEventListener("click", () => {
   chatBox.style.display = "none";
   toggleBtn.style.display = "flex";
 });
 
-/* ===============================
-   SEND EVENTS
-================================ */
+
 sendBtn.addEventListener("click", askEco);
 input.addEventListener("keypress", (e) => {
   if (e.key === "Enter") askEco();
 });
 
-/* ===============================
-   MESSAGE HELPER
-================================ */
+
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = type;
@@ -54,15 +46,30 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-/* ===============================
-   MAIN ASSISTANT LOGIC
-================================ */
 async function askEco() {
   const query = input.value.trim();
   if (!query) return;
 
   addMessage(query, "eco-user");
   input.value = "";
+   // ---------- AQI CITY / COUNTRY HANDLER ----------
+if (/aqi|air quality/i.test(query)) {
+  // Try to extract a city or country name
+  const locationMatch = query.match(/of\s+([a-zA-Z\s]+)/i);
+
+  if (locationMatch) {
+    const location = locationMatch[1].trim();
+
+    addMessage(
+      `🌫️ <b>${location}</b> frequently experiences air quality variations due to factors like traffic emissions, industrial activity, weather conditions, and seasonal changes.<br><br>
+      AQI values change hourly, so for live and accurate data, please check official air-quality dashboards such as government pollution control boards or trusted AQI platforms.`,
+      "eco-bot"
+    );
+
+    return; // ⛔ stop here, no Wikipedia needed
+  }
+}
+
 
   addMessage("🔍 Searching EcoPedia...", "eco-bot");
 
@@ -73,7 +80,6 @@ async function askEco() {
     searchQuery = `${lastTopic} ${query}`;
   }
 
-  /* ---------- WIKIPEDIA (PRIMARY) ---------- */
   try {
     const wikiRes = await fetch(
       `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
@@ -111,7 +117,7 @@ async function askEco() {
     addMessage("⚠️ Something went wrong. Please try again.", "eco-bot");
   }
 
-  /* ---------- OPENAQ (AIR QUALITY) ---------- */
+
   if (/air|pollution|aqi|quality/i.test(query)) {
     try {
       const aqiRes = await fetch("https://api.openaq.org/v2/latest?limit=1");
@@ -128,7 +134,6 @@ async function askEco() {
     }
   }
 
-  /* ---------- EPA INFO (LIGHT FALLBACK) ---------- */
   if (/environment|waste|water|soil/i.test(query)) {
     addMessage(
       "🌿 Environmental insights are supported by EPA Envirofacts, helping promote conservation and sustainable policies.",
