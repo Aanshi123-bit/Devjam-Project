@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Website Feedback Form</title>
-  <script src="feedback.js"></script>
   <style>
-
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +16,6 @@
       overflow: hidden;
     }
 
-    /* Bubble effect */
     .bubble {
       position: absolute;
       border-radius: 50%;
@@ -32,14 +29,13 @@
       100% { transform: translateY(-400px); opacity: 0; }
     }
 
-    /* Feedback form */
     .feedback-form {
       background: rgba(255, 255, 255, 0.95);
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 15px 25px rgba(0,0,0,0.6);
       width: 420px;
-      margin: 40px; /* Equal margin all sides */
+      margin: 40px;
       animation: fadeIn 1s ease-in-out;
       position: relative;
       z-index: 2;
@@ -63,7 +59,7 @@
       color: #333;
     }
 
-    textarea, select {
+    textarea, select, input {
       width: 100%;
       padding: 10px;
       margin-top: 8px;
@@ -72,7 +68,6 @@
       resize: none;
     }
 
-    /* Star rating */
     .stars {
       display: flex;
       justify-content: center;
@@ -112,7 +107,6 @@
       background: #000;
     }
 
-    /* Decorative leaf/tree background (SVG overlay) */
     .leaf-bg {
       position: absolute;
       top: 0;
@@ -128,34 +122,41 @@
     }
   </style>
 </head>
+
 <body>
-  <!-- Leaf/tree decorative background -->
+
   <div class="leaf-bg"></div>
 
-  <!-- Bubble elements -->
   <div class="bubble" style="width:40px; height:40px; left:10%; animation-duration:12s;"></div>
   <div class="bubble" style="width:25px; height:25px; left:30%; animation-duration:10s;"></div>
   <div class="bubble" style="width:50px; height:50px; left:50%; animation-duration:14s;"></div>
   <div class="bubble" style="width:35px; height:35px; left:70%; animation-duration:11s;"></div>
   <div class="bubble" style="width:20px; height:20px; left:85%; animation-duration:9s;"></div>
 
-  <!-- Feedback form -->
-  <form class="feedback-form">
+  <!-- ✅ FEEDBACK FORM -->
+  <form class="feedback-form" id="feedback-form">
     <h2>🌿 Website Feedback 🌿</h2>
 
-    <label for="feedback">What do you want to say about our website?</label>
-    <textarea id="feedback" rows="3" placeholder="Share your thoughts..."></textarea>
+    <!-- User details -->
+    <label>Your Name</label>
+    <input type="text" name="name" placeholder="Your name" required>
 
-    <label for="suggestion">Any suggestions you want to make?</label>
-    <textarea id="suggestion" rows="3" placeholder="Your suggestions..."></textarea>
+    <label>Your Email</label>
+    <input type="email" name="email" placeholder="Your email" required>
 
-    <label for="interaction">Which section did you like the most?</label>
-    <select id="interaction">
+    <label>What do you want to say about our website?</label>
+    <textarea name="thoughts" rows="3" placeholder="Share your thoughts..."></textarea>
+
+    <label>Any suggestions you want to make?</label>
+    <textarea name="suggestions" rows="3" placeholder="Your suggestions..."></textarea>
+
+    <label>Which section did you like the most?</label>
+    <select name="favoriteSection">
       <option value="">-- Select an option --</option>
-      <option value="dosdonts">Dos & Don’ts</option>
-      <option value="facts">Facts</option>
-      <option value="games">Games</option>
-      <option value="quiz">Quiz</option>
+      <option value="Dos & Don’ts">Dos & Don’ts</option>
+      <option value="Facts">Facts</option>
+      <option value="Games">Games</option>
+      <option value="Quiz">Quiz</option>
     </select>
 
     <label>Rate our website:</label>
@@ -170,11 +171,12 @@
     <button type="submit">Submit Feedback</button>
 
     <div class="home">
-        <a href="index.html"><div class="press">home</div></a>
+      <a href="First.html">home</a>
     </div>
   </form>
-  
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+  <!--  EMAILJS SCRIPT (IDs to be added by you) -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
     emailjs.init("bg2ILbaSkCsSBkMC3");
 
@@ -198,7 +200,6 @@
       });
     });
   </script>
+
 </body>
 </html>
-
-
