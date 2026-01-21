@@ -1,71 +1,56 @@
-<script>
 const toggle = document.getElementById("eco-toggle");
 const chat = document.getElementById("eco-chat");
 const closeBtn = document.getElementById("eco-close");
-const sendBtn = document.getElementById("eco-send");
-const input = document.getElementById("eco-input");
 const messages = document.getElementById("eco-messages");
+const input = document.getElementById("eco-input");
+const send = document.getElementById("eco-send");
 
-toggle.onclick = () => {
-  chat.style.display = "flex";
-  addBot("I’m EcoPedia 🌱 Ask me about sustainability, climate, air quality, or eco-friendly habits!");
-};
+// Toggle chat
+toggle.addEventListener("click", () => chat.style.display = "flex");
+closeBtn.addEventListener("click", () => chat.style.display = "none");
 
-closeBtn.onclick = () => chat.style.display = "none";
-
-sendBtn.onclick = handleQuery;
-
-function addUser(text) {
-  messages.innerHTML += `<div class="eco-user">${text}</div>`;
-}
-
-function addBot(text) {
-  messages.innerHTML += `<div class="eco-bot">${text}</div>`;
+// Add message to chat
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = type === "user" ? "eco-user" : "eco-bot";
+  div.innerHTML = text;
+  messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
 
-async function handleQuery() {
-  const q = input.value.trim();
-  if (!q) return;
+// Initial greeting
+addMessage("I’m EcoPedia, your eco-friendly assistant. Ask me anything about sustainability, green habits and more!", "bot");
 
-  addUser(q);
+// Main function
+async function askEcoPedia() {
+  const query = input.value.trim();
+  if (!query) return;
+
+  addMessage(query, "user");
   input.value = "";
 
-  if (q.toLowerCase().includes("air")) {
-    getAirQuality();
-  } else if (q.toLowerCase().includes("climate")) {
-    getClimate();
-  } else {
-    searchWikipedia(q);
-  }
-}
+  addMessage("Searching for answers...", "bot");
 
-/* 🌍 Wikipedia */
-async function searchWikipedia(query) {
-  addBot("Searching Wikipedia...");
-  const res = await fetch(
-    `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`
-  );
-  const data = await res.json();
-  addBot(data.extract || "I couldn’t find that topic.");
-}
+  let responseText = "";
 
-/* 🌫️ Air Quality (OpenAQ) */
-async function getAirQuality() {
-  addBot("Fetching air quality data...");
-  const res = await fetch("https://api.openaq.org/v2/latest?limit=1");
-  const data = await res.json();
-  const pm25 = data.results[0].measurements[0].value;
-  addBot(`Current PM2.5 level: ${pm25} µg/m³`);
-}
+  try {
+    // --- Wikipedia API ---
+    const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+    const wikiData = await wikiRes.json();
+    if (wikiData.extract) responseText += `<strong>Wikipedia:</strong> ${wikiData.extract}<br><br>`;
 
-/* 🌡️ Climate (Open-Meteo) */
-async function getClimate() {
-  addBot("Checking climate info...");
-  const res = await fetch(
-    "https://api.open-meteo.com/v1/forecast?latitude=28.6&longitude=77.2&current_weather=true"
-  );
-  const data = await res.json();
-  addBot(`Temperature: ${data.current_weather.temperature}°C`);
-}
-</script>
+    // --- OpenWeatherMap example ---
+    // Replace CITY_NAME and YOUR_API_KEY with actual values if you want live weather info
+    /*
+    const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=CITY_NAME&appid=YOUR_API_KEY&units=metric`);
+    const weatherData = await weatherRes.json();
+    responseText += `<strong>Weather:</strong> ${weatherData.weather[0].description}, ${weatherData.main.temp}°C<br><br>`;
+    */
+
+    // --- NewsAPI example ---
+    // Replace YOUR_API_KEY with your NewsAPI key
+    /*
+    const newsRes = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&apiKey=YOUR_API_KEY`);
+    const newsData = await newsRes.json();
+    if(newsData.articles && news
+
